@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>DDSW - Time to Deploy!! In QA :) :) :)</description>
+  <logRotator class="hudson.tasks.LogRotator">
+    <daysToKeep>2</daysToKeep>
+    <numToKeep>4</numToKeep>
+    <artifactDaysToKeep>2</artifactDaysToKeep>
+    <artifactNumToKeep>4</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty plugin="gitlab-logo@1.0.1">
+      <repositoryName></repositoryName>
+    </org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>ENVIRONMENT</name>
+          <description>Target Environment for the deployment!</description>
+          <__uuid>e0169864-b3a3-4db9-9fa7-2116ccfde404</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;prod&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.ChoiceParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>RELEASE_ID</name>
+          <description>Release ID to be deployed!!!</description>
+          <__uuid>d8251ab4-8881-4d56-86c5-9c7bfee7e36e</__uuid>
+          <__remote>false</__remote>
+          <__script>proc = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git config --global credential.helper store&quot;].execute()
+
+proc1 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git pull --rebase&quot;].execute()
+
+proc2 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;git describe --tags `git rev-list --tags --max-count=4`&quot;].execute()
+proc3 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;sed s%^ddsw-%%&quot;].execute()
+
+all = proc2 | proc3
+String result = all.text
+
+String filename = &quot;/tmp/releases.txt&quot;
+boolean success = new File(filename).write(result)
+
+def multiline = &quot;cat /tmp/releases.txt&quot;.execute().text
+def list = multiline.readLines()</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>false</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.ChoiceParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>DEPLOY_MAP_REDUCE</name>
+          <description>Should Map Reduce Code (XML Ingest) be Deployed?</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>DEPLOY_UDF</name>
+          <description>Should Custom UDF Code be Deployed?</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>WORKFLOWS</name>
+          <description>Workflow(s) to be Deployed!</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>all</string>
+              <string>customer</string>
+              <string>dealer_hierarchy</string>
+              <string>dealer_inventory</string>
+              <string>dealer_part_master</string>
+              <string>equipment</string>
+              <string>invoice</string>
+              <string>parts_point_of_use</string>
+              <string>work_order</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>OOZIE_HOME</name>
+          <description></description>
+          <__uuid>4f35c225-9c2e-4427-bb4c-1657d1af0df4</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;/projects/ddsw/prod/code/oozie&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>COMMON_HOME</name>
+          <description></description>
+          <__uuid>82fe2bc6-f198-469e-8fa3-f3c33d485733</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;/projects/ddsw/prod/code/common&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>MAP_REDUCE_HOME</name>
+          <description></description>
+          <__uuid>9fc616d8-5c58-471b-8e0d-1954651eb76b</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;/projects/ddsw/prod/code/lib&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>UDF_HOME</name>
+          <description></description>
+          <__uuid>f547fd67-6334-4d51-a9dc-60d0d7e39d70</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;/opt/hive-udfs&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>TEMP_DIR</name>
+          <description></description>
+          <__uuid>438225ec-c1e5-4222-8d65-ed5b3784046f</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;/tmp/stage&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>OOZIE_WEB_ROOT</name>
+          <description></description>
+          <__uuid>96b977a7-2a24-4ef4-a63c-45dbf3245b47</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;http://hpedge1.lrd.cat.com:11000/oozie/&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>OOZIE_USER</name>
+          <description></description>
+          <__uuid>18b45278-e57e-4bc1-a1b1-ad0ae4ee9256</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;hpddwa90&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>OOZIE_JOB_NAME_PREFIX</name>
+          <description></description>
+          <__uuid>ca27b0ba-77ac-47c2-8348-7538c16fde8c</__uuid>
+          <__remote>false</__remote>
+          <__script>return &quot;&apos;ddsw -&gt; prod&apos;&quot;</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterDefinition plugin="git-parameter@0.4.0">
+          <name>GIT_TAGS</name>
+          <description></description>
+          <uuid>6f0a5c7e-adb6-4430-a08c-1263e303d210</uuid>
+          <type>PT_TAG</type>
+          <branch></branch>
+          <tagFilter>*</tagFilter>
+          <sortMode>DESCENDING_SMART</sortMode>
+          <defaultValue></defaultValue>
+        </net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <com.synopsys.arc.jenkinsci.plugins.jobrestrictions.jobs.JobRestrictionProperty plugin="job-restrictions@0.4"/>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://arlgitgisp01.ecorp.cat.com/commercial_data_management/ddsw_dev.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>tags/ddsw-${RELEASE_ID}</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>scripts/ddsw_stage.sh ${RELEASE_ID} ${ENVIRONMENT}
+</command>
+    </hudson.tasks.Shell>
+    <jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin plugin="publish-over-ssh@1.13">
+      <delegate>
+        <consolePrefix>SSH: </consolePrefix>
+        <delegate>
+          <publishers>
+            <jenkins.plugins.publish__over__ssh.BapSshPublisher>
+              <configName>hdtedge1 - DEV</configName>
+              <verbose>false</verbose>
+              <transfers>
+                <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                  <remoteDirectory>./</remoteDirectory>
+                  <sourceFiles>tmp/stage/${RELEASE_ID}/**/*.tar,tmp/stage/${RELEASE_ID}/scripts/**/*.sh</sourceFiles>
+                  <excludes></excludes>
+                  <removePrefix>tmp/stage/</removePrefix>
+                  <remoteDirectorySDF>false</remoteDirectorySDF>
+                  <flatten>false</flatten>
+                  <cleanRemote>false</cleanRemote>
+                  <noDefaultExcludes>false</noDefaultExcludes>
+                  <makeEmptyDirs>false</makeEmptyDirs>
+                  <patternSeparator>[, ]+</patternSeparator>
+                  <execCommand>chmod 755 /tmp/stage/${RELEASE_ID}/scripts/*
+
+/tmp/stage/${RELEASE_ID}/scripts/ddsw_deploy.sh ${RELEASE_ID} ${ENVIRONMENT} ${DEPLOY_MAP_REDUCE} ${DEPLOY_UDF} ${WORKFLOWS} ${OOZIE_HOME} ${COMMON_HOME}  ${MAP_REDUCE_HOME} ${UDF_HOME} ${TEMP_DIR} ${OOZIE_WEB_ROOT} ${OOZIE_USER} ${OOZIE_JOB_NAME_PREFIX} 
+</execCommand>
+                  <execTimeout>120000</execTimeout>
+                  <usePty>false</usePty>
+                </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+              </transfers>
+              <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+              <usePromotionTimestamp>false</usePromotionTimestamp>
+            </jenkins.plugins.publish__over__ssh.BapSshPublisher>
+          </publishers>
+          <continueOnError>false</continueOnError>
+          <failOnError>true</failOnError>
+          <alwaysPublishFromMaster>false</alwaysPublishFromMaster>
+          <hostConfigurationAccess class="jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin" reference="../.."/>
+        </delegate>
+      </delegate>
+    </jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin>
+    <hudson.tasks.Shell>
+      <command>scripts/ddsw_local_cleanup.sh ${RELEASE_ID} ${ENVIRONMENT}</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.Mailer plugin="mailer@1.15">
+      <recipients>HPatel@ThoughtWorks.com Chalana_Aachin@cat.com Rajendran_Aravind_K@cat.com Tarabadkar_Devendra@cat.com Chappa_Dhanunjay_N@cat.com Sontakke_Dipesh_A@cat.com Chamala_Divya@cat.com Bajwa_Gaganpreet@cat.com Francis_Jonathon@cat.com Heinrich_Matthew@cat.com Kumar_Mrinal@cat.com Singh_Neha_S@cat.com Fouts_Nicholas_R@cat.com Sivajyothi_Pedapenki@cat.com Surya_Praveen@cat.com Jadabonia_Rama@cat.com Holmes_Renee@cat.com Kudamula_Uma_M@cat.com Puranam_Umasankar@cat.com Polali_Vashista@cat.com Gundra_Vijay@cat.com Kodicherla_Vivek_C@cat.com Fouts_Chad@cat.com bvander@thoughtworks.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>true</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers/>
+</project>

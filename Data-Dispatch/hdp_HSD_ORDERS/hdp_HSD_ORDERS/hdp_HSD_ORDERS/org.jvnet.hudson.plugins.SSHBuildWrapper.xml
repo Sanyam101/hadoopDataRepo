@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<org.jvnet.hudson.plugins.SSHBuildWrapper_-DescriptorImpl plugin="ssh@2.4">
+  <sites>
+    <org.jvnet.hudson.plugins.SSHSite>
+      <hostname>hdtedge1.lrd.cat.com</hostname>
+      <port>22</port>
+      <username>hdddwa90</username>
+      <password>DDSWdop#</password>
+      <keyfile></keyfile>
+      <serverAliveInterval>0</serverAliveInterval>
+      <pty>false</pty>
+    </org.jvnet.hudson.plugins.SSHSite>
+  </sites>
+</org.jvnet.hudson.plugins.SSHBuildWrapper_-DescriptorImpl>

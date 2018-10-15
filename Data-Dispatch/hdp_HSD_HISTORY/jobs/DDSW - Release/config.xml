@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>DDSW - Time to Release!!</description>
+  <logRotator class="hudson.tasks.LogRotator">
+    <daysToKeep>2</daysToKeep>
+    <numToKeep>4</numToKeep>
+    <artifactDaysToKeep>2</artifactDaysToKeep>
+    <artifactNumToKeep>4</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty plugin="gitlab-logo@1.0.1">
+      <repositoryName></repositoryName>
+    </org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.ChoiceParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>GIT_BRANCH</name>
+          <description>Git Branch to Release on!</description>
+          <__uuid>7efc948f-51c7-4b21-866f-f0f2dadafcef</__uuid>
+          <__remote>false</__remote>
+          <__script>proc = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git config --global credential.helper store&quot;].execute()
+
+proc1 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git ls-remote -h https://arlgitgisp01.ecorp.cat.com/commercial_data_management/ddsw_dev.git&quot;].execute()
+proc2 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;awk &apos;{print \$2}&apos;&quot;].execute()
+proc3 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;sed s%^refs/heads/%%&quot;].execute()
+
+all = proc1 | proc2 | proc3
+String result = all.text
+
+String filename = &quot;/tmp/branches.txt&quot;
+boolean success = new File(filename).write(result)
+
+def multiline = &quot;cat /tmp/branches.txt&quot;.execute().text
+def list = multiline.readLines()</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>false</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.ChoiceParameterDefinition>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>CURRENT_TAG</name>
+          <description>Current Tag on Git Repo - DISPLAY ONLY!!!</description>
+          <__uuid>6744c260-afbe-47cd-ad7c-c47ae37315bd</__uuid>
+          <__remote>false</__remote>
+          <__script>proc = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git config --global credential.helper store&quot;].execute()
+
+proc1 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git pull --rebase&quot;].execute()
+
+proc2 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;git describe --abbrev=0 --tags&quot;].execute()
+
+return proc2.text</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>true</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>NEXT_RELEASE_ID</name>
+          <description>NEXT Release ID is Auto-Incrementing PATCH Version on Semantic Versioning standard. 
+So input this value only if MAJOR or MINOR Release needs to happen.
+More Info ::: Semantic Versioning (MAJOR.MINOR.PATCH) - http://semver.org/</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>GIT_USER</name>
+          <description>GIT User ID...</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.PasswordParameterDefinition>
+          <name>GIT_PASSWORD</name>
+          <description>GIT Password...</description>
+          <defaultValue>PlNWXYXFUVc2X51cITPm3qdzXp2/Bz+JFgfEjuhMLlJaC+lCiIok38dzXOtz+Aon</defaultValue>
+        </hudson.model.PasswordParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>TARGET_DOMAIN</name>
+          <description>Target Domain to be released!</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>all</string>
+              <string>customer</string>
+              <string>dealer_hierarchy</string>
+              <string>dealer_inventory</string>
+              <string>dealer_part_master</string>
+              <string>equipment</string>
+              <string>invoice</string>
+              <string>parts_point_of_use</string>
+              <string>work_order</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <com.synopsys.arc.jenkinsci.plugins.jobrestrictions.jobs.JobRestrictionProperty plugin="job-restrictions@0.4"/>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://arlgitgisp01.ecorp.cat.com/commercial_data_management/ddsw_dev.git</url>
+        <credentialsId>ff531670-0081-4554-9b2c-e12edbd6fa55</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>origin/$GIT_BRANCH</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>jenkins/scripts/ddsw_release.sh</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.Mailer plugin="mailer@1.15">
+      <recipients>HPatel@ThoughtWorks.com Chalana_Aachin@cat.com Rajendran_Aravind_K@cat.com Tarabadkar_Devendra@cat.com Chappa_Dhanunjay_N@cat.com Sontakke_Dipesh_A@cat.com Chamala_Divya@cat.com Bajwa_Gaganpreet@cat.com Francis_Jonathon@cat.com Heinrich_Matthew@cat.com Kumar_Mrinal@cat.com Singh_Neha_S@cat.com Fouts_Nicholas_R@cat.com Sivajyothi_Pedapenki@cat.com Surya_Praveen@cat.com Jadabonia_Rama@cat.com Holmes_Renee@cat.com Kudamula_Uma_M@cat.com Puranam_Umasankar@cat.com Polali_Vashista@cat.com Gundra_Vijay@cat.com Kodicherla_Vivek_C@cat.com Fouts_Chad@cat.com bvander@thoughtworks.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>true</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers/>
+</project>

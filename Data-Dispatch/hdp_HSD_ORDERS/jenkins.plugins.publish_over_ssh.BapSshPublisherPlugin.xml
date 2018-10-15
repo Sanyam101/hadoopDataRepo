@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin_-Descriptor plugin="publish-over-ssh@1.13">
+  <hostConfigurations>
+    <jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+      <name>hdtedge1 - DEV</name>
+      <hostname>hdtedge1.lrd.cat.com</hostname>
+      <username>hdddwa90</username>
+      <secretPassword>wnH9+Ar4zs+vXM0LXQk15w==</secretPassword>
+      <remoteRootDir>/tmp/stage</remoteRootDir>
+      <port>22</port>
+      <commonConfig class="jenkins.plugins.publish_over_ssh.BapSshCommonConfiguration">
+        <secretPassphrase>wnH9+Ar4zs+vXM0LXQk15w==</secretPassphrase>
+        <key></key>
+        <keyPath></keyPath>
+        <disableAllExec>false</disableAllExec>
+      </commonConfig>
+      <timeout>300000</timeout>
+      <overrideKey>true</overrideKey>
+      <disableExec>false</disableExec>
+      <keyInfo>
+        <secretPassphrase>/mHnVV1K+fTn0M55NIKKphxonVVilgb3vYK8SYm9MZ0=</secretPassphrase>
+        <key></key>
+        <keyPath></keyPath>
+      </keyInfo>
+    </jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+    <jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+      <name>hpedge1 - PROD</name>
+      <hostname>hpedge1.lrd.cat.com</hostname>
+      <username>hpddwa90</username>
+      <secretPassword>wnH9+Ar4zs+vXM0LXQk15w==</secretPassword>
+      <remoteRootDir>/tmp/stage</remoteRootDir>
+      <port>22</port>
+      <commonConfig class="jenkins.plugins.publish_over_ssh.BapSshCommonConfiguration" reference="../../jenkins.plugins.publish__over__ssh.BapSshHostConfiguration/commonConfig"/>
+      <timeout>300000</timeout>
+      <overrideKey>true</overrideKey>
+      <disableExec>false</disableExec>
+      <keyInfo>
+        <secretPassphrase>/mHnVV1K+fTn0M55NIKKphxonVVilgb3vYK8SYm9MZ0=</secretPassphrase>
+        <key></key>
+        <keyPath></keyPath>
+      </keyInfo>
+    </jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+  </hostConfigurations>
+  <commonConfig reference="../hostConfigurations/jenkins.plugins.publish__over__ssh.BapSshHostConfiguration/commonConfig"/>
+  <defaults class="jenkins.plugins.publish_over_ssh.options.SshPluginDefaults"/>
+</jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin_-Descriptor>

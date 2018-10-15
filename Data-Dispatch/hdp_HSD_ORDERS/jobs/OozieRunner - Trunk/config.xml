@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>OozieRunner is a generic Oozie End to end Functional Testing Framework. &#xd;
+Project Nexus Repo - http://arlpscsp01.ecorp.cat.com:8081/nexus/content/repositories/thirdparty/com/oozierunner/</description>
+  <logRotator class="hudson.tasks.LogRotator">
+    <daysToKeep>2</daysToKeep>
+    <numToKeep>4</numToKeep>
+    <artifactDaysToKeep>2</artifactDaysToKeep>
+    <artifactNumToKeep>4</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty plugin="gitlab-logo@1.0.1">
+      <repositoryName></repositoryName>
+    </org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty>
+    <com.synopsys.arc.jenkinsci.plugins.jobrestrictions.jobs.JobRestrictionProperty plugin="job-restrictions@0.4"/>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://arlgitgisp01.ecorp.cat.com/commercial_data_management/OozieRunner.git</url>
+        <credentialsId>ff531670-0081-4554-9b2c-e12edbd6fa55</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <org.jenkinsci.plugins.gittagmessage.GitTagMessageExtension plugin="git-tag-message@1.4"/>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.plugins.gradle.Gradle plugin="gradle@1.24">
+      <description>BUILD</description>
+      <switches></switches>
+      <tasks>-Dhttps.proxyHost=proxy.cat.com -Dhttps.proxyPort=80 clean build</tasks>
+      <rootBuildScriptDir></rootBuildScriptDir>
+      <buildFile></buildFile>
+      <gradleName>(Default)</gradleName>
+      <useWrapper>true</useWrapper>
+      <makeExecutable>false</makeExecutable>
+      <fromRootBuildScriptDir>true</fromRootBuildScriptDir>
+      <useWorkspaceAsHome>true</useWorkspaceAsHome>
+    </hudson.plugins.gradle.Gradle>
+  </builders>
+  <publishers>
+    <hudson.tasks.Mailer plugin="mailer@1.15">
+      <recipients>HPatel@ThoughtWorks.com Chalana_Aachin@cat.com Rajendran_Aravind_K@cat.com Tarabadkar_Devendra@cat.com Chappa_Dhanunjay_N@cat.com Sontakke_Dipesh_A@cat.com Chamala_Divya@cat.com Bajwa_Gaganpreet@cat.com Francis_Jonathon@cat.com Heinrich_Matthew@cat.com Kumar_Mrinal@cat.com Singh_Neha_S@cat.com Fouts_Nicholas_R@cat.com Sivajyothi_Pedapenki@cat.com Surya_Praveen@cat.com Jadabonia_Rama@cat.com Holmes_Renee@cat.com Kudamula_Uma_M@cat.com Puranam_Umasankar@cat.com Polali_Vashista@cat.com Gundra_Vijay@cat.com Kodicherla_Vivek_C@cat.com Fouts_Chad@cat.com bvander@thoughtworks.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>true</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers/>
+</project>

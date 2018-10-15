@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>DDSW - Trunk - CI</description>
+  <logRotator class="hudson.tasks.LogRotator">
+    <daysToKeep>2</daysToKeep>
+    <numToKeep>4</numToKeep>
+    <artifactDaysToKeep>2</artifactDaysToKeep>
+    <artifactNumToKeep>4</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty plugin="gitlab-logo@1.0.1">
+      <repositoryName></repositoryName>
+    </org.jenkinsci.plugins.gitlablogo.GitlabLogoProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <com.seitenbau.jenkins.plugins.dynamicparameter.ChoiceParameterDefinition plugin="dynamicparameter@0.2.0">
+          <name>GIT_BRANCH</name>
+          <description>GIT Branch to build on!</description>
+          <__uuid>38fb3951-7bda-4606-9dd1-6bcd2104b50a</__uuid>
+          <__remote>false</__remote>
+          <__script>proc = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git config --global credential.helper store&quot;].execute()
+
+proc1 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;/usr/local/bin/git ls-remote -h https://arlgitgisp01.ecorp.cat.com/commercial_data_management/ddsw_dev.git&quot;].execute()
+proc2 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;awk &apos;{print \$2}&apos;&quot;].execute()
+proc3 = [&apos;/bin/bash&apos;, &apos;-c&apos;, &quot;sed s%^refs/heads/%%&quot;].execute()
+
+all = proc1 | proc2 | proc3
+String result = all.text
+
+String filename = &quot;/tmp/branches.txt&quot;
+boolean success = new File(filename).write(result)
+
+def multiline = &quot;cat /tmp/branches.txt&quot;.execute().text
+def list = multiline.readLines()</__script>
+          <__localBaseDirectory serialization="custom">
+            <hudson.FilePath>
+              <default>
+                <remote>/ddsw/jenkins/home/dynamic_parameter/classpath</remote>
+              </default>
+              <boolean>true</boolean>
+            </hudson.FilePath>
+          </__localBaseDirectory>
+          <__remoteBaseDirectory>dynamic_parameter_classpath</__remoteBaseDirectory>
+          <__classPath></__classPath>
+          <readonlyInputField>false</readonlyInputField>
+        </com.seitenbau.jenkins.plugins.dynamicparameter.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <com.synopsys.arc.jenkinsci.plugins.jobrestrictions.jobs.JobRestrictionProperty plugin="job-restrictions@0.4"/>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://arlgitgisp01.ecorp.cat.com/commercial_data_management/ddsw_dev.git</url>
+        <credentialsId>ff531670-0081-4554-9b2c-e12edbd6fa55</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>origin/$GIT_BRANCH</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <org.jenkinsci.plugins.gittagmessage.GitTagMessageExtension plugin="git-tag-message@1.4"/>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.plugins.gradle.Gradle plugin="gradle@1.24">
+      <description>BUILD</description>
+      <switches></switches>
+      <tasks>-Dhttps.proxyHost=proxy.cat.com -Dhttps.proxyPort=80 clean build</tasks>
+      <rootBuildScriptDir></rootBuildScriptDir>
+      <buildFile></buildFile>
+      <gradleName>(Default)</gradleName>
+      <useWrapper>true</useWrapper>
+      <makeExecutable>false</makeExecutable>
+      <fromRootBuildScriptDir>true</fromRootBuildScriptDir>
+      <useWorkspaceAsHome>false</useWorkspaceAsHome>
+    </hudson.plugins.gradle.Gradle>
+  </builders>
+  <publishers>
+    <hudson.tasks.Mailer plugin="mailer@1.15">
+      <recipients>HPatel@ThoughtWorks.com Chalana_Aachin@cat.com Rajendran_Aravind_K@cat.com Tarabadkar_Devendra@cat.com Chappa_Dhanunjay_N@cat.com Sontakke_Dipesh_A@cat.com Chamala_Divya@cat.com Bajwa_Gaganpreet@cat.com Francis_Jonathon@cat.com Heinrich_Matthew@cat.com Kumar_Mrinal@cat.com Singh_Neha_S@cat.com Fouts_Nicholas_R@cat.com Sivajyothi_Pedapenki@cat.com Surya_Praveen@cat.com Jadabonia_Rama@cat.com Holmes_Renee@cat.com Kudamula_Uma_M@cat.com Puranam_Umasankar@cat.com Polali_Vashista@cat.com Gundra_Vijay@cat.com Kodicherla_Vivek_C@cat.com Fouts_Chad@cat.com bvander@thoughtworks.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>true</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers/>
+</project>
