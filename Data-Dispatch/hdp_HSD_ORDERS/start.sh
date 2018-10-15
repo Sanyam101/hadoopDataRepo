@@ -1,5 +1,4 @@
 #!/bin/sh
-#comment1
 
 # adding commnets for checking hadoop update
 export JENKINS_HOME=/ddsw/jenkins/home
