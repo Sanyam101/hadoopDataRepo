@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# adding commnets for checking hadoop update
+# adding new comments to check for changes in dev server
 export JENKINS_HOME=/ddsw/jenkins/home
 echo "JENKINS_HOME Set to : " $JENKINS_HOME
 
