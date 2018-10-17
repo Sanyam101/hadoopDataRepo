@@ -1,4 +1,5 @@
 #!/bin/sh
+# adding 2nd comment to test deployment changes # commit 2
 
 export JENKINS_HOME=/ddsw/jenkins/home
 echo "JENKINS_HOME Set to : " $JENKINS_HOME
