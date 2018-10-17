@@ -1,4 +1,5 @@
 #!/bin/sh
+# adding commit 1 to test for changes 
 
 export JENKINS_HOME=/ddsw/jenkins/home
 echo "JENKINS_HOME Set to : " $JENKINS_HOME
